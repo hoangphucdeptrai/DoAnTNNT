@@ -20,11 +20,16 @@ cd <your-repo-name>
 # Cài đặt dependencies
 pip install -r requirements.txt
 
+# Tạo dữ liệu giả lập để train AI (80% dữ liệu)
+python generate_data.py
+
 # Chạy server
 python app_shop.py
 ```
 
 Truy cập: http://localhost:5001
+
+**Lưu ý:** Script `generate_data.py` tạo 200 mẫu dữ liệu giả lập (80%) để AI có thể train ngay. 20% còn lại sẽ đến từ người dùng thực tế.
 
 ## Deploy lên Render (Miễn phí)
 

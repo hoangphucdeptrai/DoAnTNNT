@@ -62,22 +62,26 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 ---
 
 ### SLIDE 4: KIẾN TRÚC HỆ THỐNG (3 phút)
-**Tiêu đề:** Kiến trúc ShopAI
+**Tiêu đề:** Kiến trúc Shop Dê!
 
 **Sơ đồ:**
 ```
-[Người dùng] 
-    ↓ (Xem trang)
-[Frontend - HTML/CSS/JS]
-    ↓ (Gửi dữ liệu)
-[Backend - Flask API]
-    ↓ (Lưu trữ)
-[Database - CSV]
-    ↓ (Training)
-[AI Model - Linear Regression]
-    ↓ (Dự đoán)
-[Analytics Dashboard]
+[Dữ liệu giả lập - 80%] ──┐
+                          ├─→ [Database - CSV]
+[Người dùng thực - 20%] ──┘        ↓
+                              [Training]
+                                   ↓
+                         [AI Model - Linear Regression]
+                                   ↓
+                              [Dự đoán]
+                                   ↓
+                         [Analytics Dashboard]
 ```
+
+**Điểm đặc biệt:**
+- 🎲 **80% dữ liệu giả lập**: Tạo sẵn 200 mẫu để model train ngay
+- 👥 **20% dữ liệu thực**: Từ người dùng thực tế để cải thiện model
+- 🔄 **Tự động học**: Model tự động retrain khi có dữ liệu mới
 
 **Công nghệ:**
 - Frontend: Bootstrap 5, JavaScript
@@ -86,11 +90,39 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 - Database: CSV (có thể nâng cấp PostgreSQL)
 
 **Nói:**
-> "Hệ thống gồm 3 tầng: Frontend thu thập dữ liệu, Backend xử lý, AI Model học và dự đoán."
+> "Hệ thống gồm 3 tầng: Frontend thu thập dữ liệu, Backend xử lý, AI Model học và dự đoán. Đặc biệt, em đã tạo sẵn 200 mẫu dữ liệu giả lập (80%) dựa trên logic thực tế để model có thể train ngay mà không cần đợi người dùng. 20% còn lại sẽ đến từ người dùng thực để model ngày càng chính xác."
 
 ---
 
-### SLIDE 5: DEMO THỰC TẾ (5 phút)
+### SLIDE 5: DỮ LIỆU TRAINING (2 phút)
+**Tiêu đề:** Chiến lược dữ liệu thông minh
+
+**Vấn đề:**
+❌ Nếu chỉ dùng dữ liệu thực → Phải đợi lâu mới đủ data train
+❌ Model không thể hoạt động ngay từ đầu
+
+**Giải pháp:**
+✅ **80% Dữ liệu giả lập (Synthetic Data):**
+- Tạo 200 mẫu dựa trên logic thực tế
+- Sản phẩm giá cao → Xem lâu hơn
+- Desktop → Xem lâu hơn Mobile
+- Rating cao → Xem lâu hơn
+
+✅ **20% Dữ liệu thực:**
+- Từ người dùng thực tế
+- Giúp model chính xác hơn theo thời gian
+
+**Kết quả:**
+- Model hoạt động ngay từ đầu
+- Độ chính xác ban đầu: ~75%
+- Tự động cải thiện khi có thêm dữ liệu thực
+
+**Nói:**
+> "Để model hoạt động ngay, em đã tạo 200 mẫu dữ liệu giả lập dựa trên logic thực tế. Ví dụ: sản phẩm giá cao thường được xem lâu hơn, desktop xem lâu hơn mobile. Khi có người dùng thực, model sẽ tự động học và chính xác hơn."
+
+---
+
+### SLIDE 6: DEMO THỰC TẾ (5 phút)
 **Tiêu đề:** Demo sản phẩm
 
 **Các bước demo:**
@@ -119,7 +151,7 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 
 ---
 
-### SLIDE 6: KẾT QUẢ & ĐÁNH GIÁ (2 phút)
+### SLIDE 7: KẾT QUẢ & ĐÁNH GIÁ (2 phút)
 **Tiêu đề:** Kết quả đạt được
 
 **Metrics:**
@@ -140,7 +172,7 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 
 ---
 
-### SLIDE 7: ỨNG DỤNG THỰC TẾ (2 phút)
+### SLIDE 8: ỨNG DỤNG THỰC TẾ (2 phút)
 **Tiêu đề:** Ứng dụng trong thực tế
 
 **Các lĩnh vực:**
@@ -162,7 +194,7 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 
 ---
 
-### SLIDE 8: HẠN CHẾ & HƯỚNG PHÁT TRIỂN (2 phút)
+### SLIDE 9: HẠN CHẾ & HƯỚNG PHÁT TRIỂN (2 phút)
 **Tiêu đề:** Hạn chế và hướng phát triển
 
 **Hạn chế hiện tại:**
@@ -179,7 +211,7 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 
 ---
 
-### SLIDE 9: KẾT LUẬN (1 phút)
+### SLIDE 10: KẾT LUẬN (1 phút)
 **Tiêu đề:** Kết luận
 
 **Tóm tắt:**
@@ -198,7 +230,7 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 
 ---
 
-### SLIDE 10: Q&A
+### SLIDE 11: Q&A
 **Tiêu đề:** Câu hỏi & Trả lời
 
 **Chuẩn bị trả lời:**
