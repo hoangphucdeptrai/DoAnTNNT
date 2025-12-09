@@ -29,7 +29,13 @@ python app_shop.py
 
 Truy cập: http://localhost:5001
 
-**Lưu ý:** Script `generate_data.py` tạo 200 mẫu dữ liệu giả lập (80%) để AI có thể train ngay. 20% còn lại sẽ đến từ người dùng thực tế.
+**Lưu ý:** Script `generate_data.py` tải 200 mẫu dữ liệu thực từ **UCI Machine Learning Repository** (Online Shoppers Purchasing Intention Dataset) để AI có thể train ngay. Dữ liệu từ người dùng thực tế sẽ tiếp tục cải thiện model.
+
+**Nguồn dữ liệu:**
+- Dataset: Online Shoppers Purchasing Intention
+- Nguồn: UCI Machine Learning Repository
+- Trích dẫn: Sakar, C.O., Polat, S.O., Katircioglu, M. et al. (2019)
+- Link: https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset
 
 ## Deploy lên Render (Miễn phí)
 

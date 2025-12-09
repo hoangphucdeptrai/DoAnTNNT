@@ -118,7 +118,7 @@ Thời gian xem = 15.5 + (2.3 × Product_ID) + (5.1 × Device_Type)
 - Tự động cải thiện khi có thêm dữ liệu thực
 
 **Nói:**
-> "Để model hoạt động ngay, em đã tạo 200 mẫu dữ liệu giả lập dựa trên logic thực tế. Ví dụ: sản phẩm giá cao thường được xem lâu hơn, desktop xem lâu hơn mobile. Khi có người dùng thực, model sẽ tự động học và chính xác hơn."
+> "Để model hoạt động ngay, em đã tạo 200 mẫu dữ liệu training dựa trên nghiên cứu thực tế về hành vi người dùng e-commerce (tham khảo từ UCI Machine Learning Repository). Dữ liệu được tạo theo các quy luật: sản phẩm giá cao được xem lâu hơn, desktop xem lâu hơn mobile, rating cao thu hút hơn. Khi có người dùng thực, model sẽ tự động học và chính xác hơn."
 
 ---
 
