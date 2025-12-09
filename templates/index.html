@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản phẩm AI Tracking</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 20px; background: #f0f2f5; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .img-placeholder { width: 100%; height: 300px; background: #ddd; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        .admin-box { margin-top: 30px; padding: 15px; background: #2c3e50; color: white; border-radius: 8px; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800" alt="Điện thoại" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px;">
+        <h1>Điện thoại thông minh Super AI</h1>
+        <p>
+            Đây là đoạn văn bản mô tả sản phẩm. Bạn hãy đọc nó. 
+            Hệ thống đang âm thầm đo lường xem bạn đọc đoạn này mất bao lâu.
+            Dữ liệu của bạn sẽ được gửi về Server để làm thông minh hơn cho thuật toán Hồi quy tuyến tính.
+        </p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <button onclick="alert('Đã thêm vào giỏ!')" style="padding: 10px 20px; background: blue; color: white; border: none; cursor: pointer;">Mua Ngay</button>
+
+        <div class="admin-box">
+            <h3>🤖 AI Analytics (Real-time)</h3>
+            <p>Số người đã đóng góp dữ liệu: <strong id="user-count">...</strong> người</p>
+            <p>⏱️ Thời gian trung bình mọi người xem: <strong id="avg-time" style="color: #3498db;">...</strong> giây</p>
+            <p>📊 Thời gian ngắn nhất / dài nhất: <strong id="min-time">...</strong>s / <strong id="max-time">...</strong>s</p>
+            <p>🔮 AI Dự đoán bạn sẽ xem trong: <strong id="pred-time" style="color: yellow;">...</strong> giây</p>
+            <p>⏰ Thời gian bạn đang xem thực tế: <strong id="real-time" style="color: #2ecc71;">0</strong> giây</p>
+        </div>
+    </div>
+
+    <script>
+        let startTime = Date.now();
+        let wordCount = 300; // Giả định bài này 300 từ
+        let imageCount = 1;
+        let loadTime = 1.2;
+        let isDesktop = window.innerWidth > 768 ? 1 : 0;
+
+        // 1. Khi vào trang: Gọi lên Server để xin dự đoán
+        fetch('/predict', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                word_count: wordCount,
+                image_count: imageCount,
+                load_time: loadTime,
+                is_desktop: isDesktop
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('pred-time').innerText = data.prediction;
+            document.getElementById('user-count').innerText = data.data_count;
+            document.getElementById('avg-time').innerText = data.avg_time;
+            document.getElementById('min-time').innerText = data.min_time;
+            document.getElementById('max-time').innerText = data.max_time;
+        });
+
+        // 2. Bộ đếm giờ hiển thị cho vui
+        setInterval(() => {
+            let seconds = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById('real-time').innerText = seconds;
+        }, 1000);
+
+        // 3. QUAN TRỌNG: Gửi dữ liệu về Server khi người dùng rời trang
+        // Lưu ý: visibilitychange tin cậy hơn unload trên mobile
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                sendData();
+            }
+        });
+
+        function sendData() {
+            let timeSpent = (Date.now() - startTime) / 1000;
+            
+            // Sử dụng navigator.sendBeacon để gửi dữ liệu kể cả khi tab đã đóng
+            let data = JSON.stringify({
+                word_count: wordCount,
+                image_count: imageCount,
+                load_time: loadTime,
+                is_desktop: isDesktop,
+                time_on_page: timeSpent
+            });
+            
+            navigator.sendBeacon('/save_data', new Blob([data], {type: 'application/json'}));
+        }
+    </script>
+</body>
+</html>

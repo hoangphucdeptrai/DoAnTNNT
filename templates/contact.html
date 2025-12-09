@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set page_type = "contact" %}
+
+{% block title %}Liên Hệ - ShopAI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <h2 class="mb-4 text-center"><i class="fas fa-envelope"></i> Liên Hệ Với Chúng Tôi</h2>
+        
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Họ và Tên</label>
+                        <input type="text" class="form-control" placeholder="Nguyễn Văn A">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" placeholder="example@email.com">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Số Điện Thoại</label>
+                        <input type="tel" class="form-control" placeholder="0123456789">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nội Dung</label>
+                        <textarea class="form-control" rows="5" placeholder="Nhập nội dung..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100" onclick="event.preventDefault(); alert('Cảm ơn bạn đã liên hệ!')">
+                        <i class="fas fa-paper-plane"></i> Gửi Tin Nhắn
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <h5>Thông Tin Liên Hệ</h5>
+            <p><i class="fas fa-map-marker-alt text-primary"></i> 123 Đường ABC, Quận XYZ, TP.HCM</p>
+            <p><i class="fas fa-phone text-primary"></i> 0123-456-789</p>
+            <p><i class="fas fa-envelope text-primary"></i> contact@shopai.com</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
