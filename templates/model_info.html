@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% set page_type = "model" %}
+
+{% block title %}AI Model Info - ShopAI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .info-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .metric-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .formula {
+        background: #f8f9fa;
+        padding: 15px;
+        border-left: 4px solid var(--primary-color);
+        font-family: 'Courier New', monospace;
+        margin: 15px 0;
+    }
+    .progress {
+        height: 30px;
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-brain"></i> Thông Tin Model AI</h2>
+    <a href="/admin/analytics" class="btn btn-outline-primary"><i class="fas fa-chart-bar"></i> Analytics</a>
+</div>
+
+{% if model_info %}
+<!-- Model Overview -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="info-card">
+            <h4><i class="fas fa-robot"></i> Thuật Toán: {{ model_info.algorithm }}</h4>
+            <p class="text-muted">Model học máy để dự đoán thời gian người dùng xem sản phẩm</p>
+        </div>
+    </div>
+</div>
+
+<!-- Metrics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="metric-box">
+            <h5>R² Score</h5>
+            <h2>{{ model_info.metrics.r2_score }}</h2>
+            <small>Độ chính xác model</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <h5>RMSE</h5>
+            <h2>{{ model_info.metrics.rmse }}s</h2>
+            <small>Sai số trung bình</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <h5>Training Data</h5>
+            <h2>{{ model_info.metrics.train_samples }}</h2>
+            <small>Số mẫu huấn luyện</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="metric-box" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <h5>Test Data</h5>
+            <h2>{{ model_info.metrics.test_samples }}</h2>
+            <small>Số mẫu kiểm tra</small>
+        </div>
+    </div>
+</div>
+
+<!-- Formula -->
+<div class="info-card mb-4">
+    <h4><i class="fas fa-calculator"></i> Công Thức Hồi Quy Tuyến Tính</h4>
+    <div class="formula">
+        <strong>y = β₀ + β₁x₁ + β₂x₂</strong>
+        <br><br>
+        Trong đó:
+        <ul class="mt-2">
+            <li><strong>y</strong> = Thời gian xem trang (giây)</li>
+            <li><strong>x₁</strong> = Product ID (ID sản phẩm)</li>
+            <li><strong>x₂</strong> = Device Type (Desktop=1, Mobile=0)</li>
+            <li><strong>β₀</strong> = {{ model_info.intercept }} (Intercept)</li>
+            <li><strong>β₁</strong> = {{ model_info.coefficients.product_id }} (Hệ số Product ID)</li>
+            <li><strong>β₂</strong> = {{ model_info.coefficients.device_type }} (Hệ số Device Type)</li>
+        </ul>
+    </div>
+    
+    <div class="alert alert-info mt-3">
+        <strong>Ví dụ tính toán:</strong><br>
+        Dự đoán thời gian xem sản phẩm ID=3 trên Desktop:<br>
+        y = {{ model_info.intercept }} + ({{ model_info.coefficients.product_id }} × 3) + ({{ model_info.coefficients.device_type }} × 1)
+        = <strong>{{ (model_info.intercept + model_info.coefficients.product_id * 3 + model_info.coefficients.device_type * 1)|round(2) }} giây</strong>
+    </div>
+</div>
+
+<!-- Feature Importance -->
+{% if importance %}
+<div class="info-card mb-4">
+    <h4><i class="fas fa-chart-pie"></i> Tầm Quan Trọng Của Features</h4>
+    <p class="text-muted">Mức độ ảnh hưởng của từng yếu tố đến thời gian xem</p>
+    
+    {% for feature, percent in importance.items() %}
+    <div class="mb-3">
+        <div class="d-flex justify-content-between mb-1">
+            <span><strong>{{ feature }}</strong></span>
+            <span>{{ percent }}%</span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar 
+                {% if percent > 60 %}bg-success
+                {% elif percent > 40 %}bg-warning
+                {% else %}bg-info{% endif %}" 
+                style="width: {{ percent }}%">
+                {{ percent }}%
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- How it works -->
+<div class="info-card">
+    <h4><i class="fas fa-lightbulb"></i> Cách Hoạt Động</h4>
+    <ol>
+        <li><strong>Thu thập dữ liệu:</strong> Mỗi khi người dùng xem trang, hệ thống ghi lại thời gian xem, ID sản phẩm, loại thiết bị</li>
+        <li><strong>Training:</strong> Model học từ dữ liệu thực tế bằng thuật toán Linear Regression</li>
+        <li><strong>Dự đoán:</strong> Khi có người dùng mới, model dự đoán họ sẽ xem trong bao lâu</li>
+        <li><strong>Tự động cải thiện:</strong> Càng nhiều dữ liệu, model càng chính xác</li>
+    </ol>
+    
+    <div class="alert alert-success mt-3">
+        <i class="fas fa-check-circle"></i> <strong>Ưu điểm:</strong> Model tự học và cải thiện theo thời gian, không cần can thiệp thủ công
+    </div>
+</div>
+
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-robot fa-5x text-muted mb-3"></i>
+    <h4>Model chưa được huấn luyện</h4>
+    <p class="text-muted">Cần ít nhất 10 mẫu dữ liệu để train model</p>
+</div>
+{% endif %}
+
+{% endblock %}

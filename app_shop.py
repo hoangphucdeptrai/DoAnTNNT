@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
 import os
 import json
+from ml_model import TimePredictor
 
 app = Flask(__name__)
+
+# Khởi tạo AI Model
+predictor = TimePredictor()
 
 # File lưu dữ liệu tracking
 TRACKING_FILE = 'tracking_data.csv'
@@ -111,6 +114,17 @@ def product_detail(product_id):
 def contact():
     return render_template('contact.html')
 
+@app.route('/admin/model')
+def admin_model():
+    """Trang hiển thị thông tin Model AI"""
+    predictor.train()
+    model_info = predictor.get_model_info()
+    importance = predictor.get_feature_importance()
+    
+    return render_template('model_info.html', 
+                         model_info=model_info, 
+                         importance=importance)
+
 @app.route('/admin/analytics')
 def admin_analytics():
     if not os.path.exists(TRACKING_FILE):
@@ -192,6 +206,37 @@ def get_stats():
             }
             return jsonify(stats)
     return jsonify({'total_visits': 0, 'avg_time': 0, 'total_time': 0})
+
+# API dự đoán thời gian xem
+@app.route('/api/predict', methods=['POST'])
+def predict_time():
+    data = request.json
+    product_id = data.get('product_id', 0)
+    device_type = data.get('device_type', 'desktop')
+    
+    # Train model nếu chưa train
+    if not predictor.is_trained:
+        predictor.train()
+    
+    # Dự đoán
+    prediction = predictor.predict(product_id, device_type)
+    
+    return jsonify({
+        'predicted_time': prediction,
+        'model_trained': predictor.is_trained
+    })
+
+# API thông tin model
+@app.route('/api/model-info')
+def model_info():
+    predictor.train()  # Retrain với data mới nhất
+    info = predictor.get_model_info()
+    importance = predictor.get_feature_importance()
+    
+    if info:
+        info['feature_importance'] = importance
+        return jsonify(info)
+    return jsonify({'error': 'Model chưa được train'})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
