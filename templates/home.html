@@ -37,7 +37,17 @@
     <div class="col-md-3 col-6 mb-3">
         <a href="/products?category={{ category }}" class="text-decoration-none">
             <div class="card category-badge text-center p-3">
-                <i class="fas fa-tag fa-3x mb-2 text-primary"></i>
+                {% if category == 'Tất Cả' %}
+                    <i class="fas fa-th fa-3x mb-2 text-primary"></i>
+                {% elif category == 'Quần Áo' %}
+                    <i class="fas fa-tshirt fa-3x mb-2 text-success"></i>
+                {% elif category == 'Giày Dép' %}
+                    <i class="fas fa-shoe-prints fa-3x mb-2 text-warning"></i>
+                {% elif category == 'Phụ Kiện' %}
+                    <i class="fas fa-gem fa-3x mb-2 text-danger"></i>
+                {% else %}
+                    <i class="fas fa-tag fa-3x mb-2 text-primary"></i>
+                {% endif %}
                 <h5>{{ category }}</h5>
             </div>
         </a>
