@@ -5,27 +5,32 @@
 {% block title %}{{ product.name }} - ShopAI{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="/products">Sản phẩm</a></li>
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb bg-white p-3 rounded shadow-sm">
+        <li class="breadcrumb-item"><a href="/" class="text-decoration-none"><i class="fas fa-home"></i> Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="/products" class="text-decoration-none">Sản phẩm</a></li>
         <li class="breadcrumb-item active">{{ product.name }}</li>
     </ol>
 </nav>
 
-<div class="row">
+<div class="row bg-white p-4 rounded shadow-sm mb-4">
     <!-- Product Image -->
     <div class="col-md-6 mb-4">
-        <img src="{{ product.image }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
+        <div class="position-relative">
+            <img src="{{ product.image }}" class="img-fluid rounded shadow" alt="{{ product.name }}" style="width: 100%; height: 450px; object-fit: cover;">
+            <span class="badge bg-danger position-absolute top-0 start-0 m-3" style="font-size: 1rem;">
+                <i class="fas fa-fire"></i> Hot
+            </span>
+        </div>
     </div>
 
     <!-- Product Info -->
     <div class="col-md-6">
-        <span class="badge bg-secondary mb-2">{{ product.category }}</span>
-        <h2>{{ product.name }}</h2>
+        <span class="badge bg-secondary mb-2" style="font-size: 0.9rem;">{{ product.category }}</span>
+        <h2 class="mb-3">{{ product.name }}</h2>
         
-        <div class="mb-3">
-            <span class="text-warning">
+        <div class="mb-3 d-flex align-items-center">
+            <span class="text-warning me-2" style="font-size: 1.2rem;">
                 {% for i in range(5) %}
                     {% if i < product.rating %}
                         <i class="fas fa-star"></i>
@@ -34,20 +39,42 @@
                     {% endif %}
                 {% endfor %}
             </span>
-            <span class="ms-2">{{ product.rating }}/5</span>
-            <span class="text-muted ms-3">Đã bán {{ product.sold }}</span>
+            <span class="me-3"><strong>{{ product.rating }}</strong>/5</span>
+            <span class="text-muted">| Đã bán <strong>{{ product.sold }}</strong></span>
         </div>
 
-        <div class="bg-light p-3 rounded mb-3">
-            <h3 class="price mb-0">{{ "{:,.0f}".format(product.price) }}đ</h3>
+        <div class="bg-light p-4 rounded mb-4" style="border-left: 4px solid var(--primary-color);">
+            <small class="text-muted d-block mb-1">Giá sản phẩm</small>
+            <h2 class="price mb-0">{{ "{:,.0f}".format(product.price) }}đ</h2>
         </div>
 
-        <h5>Mô tả sản phẩm:</h5>
-        <p class="text-muted">{{ product.description }}</p>
+        <div class="mb-4">
+            <h5><i class="fas fa-info-circle"></i> Mô tả sản phẩm</h5>
+            <p class="text-muted">{{ product.description }}</p>
+            
+            <div class="row mt-3">
+                <div class="col-6">
+                    <div class="border rounded p-2 text-center">
+                        <i class="fas fa-truck text-primary"></i>
+                        <small class="d-block">Miễn phí vận chuyển</small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="border rounded p-2 text-center">
+                        <i class="fas fa-shield-alt text-success"></i>
+                        <small class="d-block">Bảo hành 12 tháng</small>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div class="mb-3">
-            <label class="form-label">Số lượng:</label>
-            <input type="number" class="form-control" value="1" min="1" style="width: 100px;">
+        <div class="mb-4">
+            <label class="form-label"><strong>Số lượng:</strong></label>
+            <div class="input-group" style="width: 150px;">
+                <button class="btn btn-outline-secondary" type="button">-</button>
+                <input type="number" class="form-control text-center" value="1" min="1">
+                <button class="btn btn-outline-secondary" type="button">+</button>
+            </div>
         </div>
 
         <div class="d-grid gap-2">
@@ -60,9 +87,12 @@
         </div>
 
         <!-- AI Analytics Box -->
-        <div class="mt-4 p-3 rounded" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-            <h6><i class="fas fa-chart-line"></i> AI Analytics</h6>
-            <small>Thời gian bạn đang xem: <strong id="view-time">0</strong>s</small>
+        <div class="mt-4 p-3 rounded shadow-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h6><i class="fas fa-chart-line"></i> AI Analytics - Tracking</h6>
+            <div class="d-flex justify-content-between">
+                <small>Thời gian bạn đang xem:</small>
+                <strong id="view-time">0s</strong>
+            </div>
         </div>
     </div>
 </div>
@@ -71,15 +101,26 @@
 <div class="mt-5">
     <h4 class="mb-3"><i class="fas fa-tags"></i> Sản Phẩm Liên Quan</h4>
     <div class="row">
+        {% for related in related_products %}
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card product-card">
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" class="card-img-top" alt="Product" style="height: 150px; object-fit: cover;">
+            <div class="card product-card h-100">
+                <img src="{{ related.image }}" class="card-img-top" alt="{{ related.name }}" style="height: 180px; object-fit: cover;">
                 <div class="card-body">
-                    <h6>Sản phẩm tương tự</h6>
-                    <span class="price">299,000đ</span>
+                    <span class="badge bg-secondary mb-2">{{ related.category }}</span>
+                    <h6 class="card-title">{{ related.name }}</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="price">{{ "{:,.0f}".format(related.price) }}đ</span>
+                        <small class="text-muted">
+                            <i class="fas fa-star text-warning"></i> {{ related.rating }}
+                        </small>
+                    </div>
+                    <a href="/product/{{ related.id }}" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="fas fa-eye"></i> Xem Chi Tiết
+                    </a>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

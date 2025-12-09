@@ -107,7 +107,13 @@ def products():
 def product_detail(product_id):
     product = next((p for p in PRODUCTS if p['id'] == product_id), None)
     if product:
-        return render_template('product_detail.html', product=product)
+        # Lấy sản phẩm liên quan (cùng danh mục, khác ID)
+        related_products = [p for p in PRODUCTS if p['category'] == product['category'] and p['id'] != product_id]
+        # Nếu không đủ, lấy thêm sản phẩm khác
+        if len(related_products) < 4:
+            other_products = [p for p in PRODUCTS if p['id'] != product_id and p not in related_products]
+            related_products.extend(other_products[:4-len(related_products)])
+        return render_template('product_detail.html', product=product, related_products=related_products[:4])
     return "Sản phẩm không tồn tại", 404
 
 @app.route('/contact')
