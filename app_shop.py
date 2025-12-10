@@ -217,15 +217,30 @@ def get_stats():
 @app.route('/api/predict', methods=['POST'])
 def predict_time():
     data = request.json
-    product_id = data.get('product_id', 0)
-    device_type = data.get('device_type', 'desktop')
+    
+    # Mapping từ sản phẩm sang UCI features
+    product_id = data.get('product_id', 1)
+    
+    # Estimate UCI features dựa trên product
+    if product_id > 0:
+        product_related = min(product_id * 5, 50)  # 5-50 trang sản phẩm
+        administrative = 2  # Vài trang admin
+        informational = 1   # Ít trang thông tin
+        page_values = product_id * 10  # Giá trị trang
+        special_day = 0.2   # Ngày thường
+    else:
+        product_related = 1
+        administrative = 5
+        informational = 2
+        page_values = 0
+        special_day = 0
     
     # Train model nếu chưa train
     if not predictor.is_trained:
         predictor.train()
     
     # Dự đoán
-    prediction = predictor.predict(product_id, device_type)
+    prediction = predictor.predict(product_related, administrative, informational, page_values, special_day)
     
     return jsonify({
         'predicted_time': prediction,

@@ -84,26 +84,33 @@
 
 <!-- Formula -->
 <div class="info-card mb-4">
-    <h4><i class="fas fa-calculator"></i> Công Thức Hồi Quy Tuyến Tính</h4>
+    <h4><i class="fas fa-calculator"></i> Công Thức Hồi Quy Tuyến Tính (UCI Dataset)</h4>
     <div class="formula">
-        <strong>y = β₀ + β₁x₁ + β₂x₂</strong>
+        <strong>y = β₀ + β₁x₁ + β₂x₂ + β₃x₃ + β₄x₄ + β₅x₅</strong>
         <br><br>
-        Trong đó:
+        <strong>Dữ liệu từ UCI Machine Learning Repository:</strong>
         <ul class="mt-2">
-            <li><strong>y</strong> = Thời gian xem trang (giây)</li>
-            <li><strong>x₁</strong> = Product ID (ID sản phẩm)</li>
-            <li><strong>x₂</strong> = Device Type (Desktop=1, Mobile=0)</li>
+            <li><strong>y</strong> = Tổng thời gian xem (ProductRelated_Duration + Administrative_Duration + Informational_Duration)</li>
+            <li><strong>x₁</strong> = ProductRelated (Số trang sản phẩm)</li>
+            <li><strong>x₂</strong> = Administrative (Số trang quản trị)</li>
+            <li><strong>x₃</strong> = Informational (Số trang thông tin)</li>
+            <li><strong>x₄</strong> = PageValues (Giá trị trang)</li>
+            <li><strong>x₅</strong> = SpecialDay (Ngày đặc biệt)</li>
+        </ul>
+        <br>
+        <strong>Hệ số:</strong>
+        <ul>
             <li><strong>β₀</strong> = {{ model_info.intercept }} (Intercept)</li>
-            <li><strong>β₁</strong> = {{ model_info.coefficients.product_id }} (Hệ số Product ID)</li>
-            <li><strong>β₂</strong> = {{ model_info.coefficients.device_type }} (Hệ số Device Type)</li>
+            {% for feature, coef in model_info.coefficients.items() %}
+            <li><strong>{{ feature }}</strong> = {{ coef }}</li>
+            {% endfor %}
         </ul>
     </div>
     
     <div class="alert alert-info mt-3">
-        <strong>Ví dụ tính toán:</strong><br>
-        Dự đoán thời gian xem sản phẩm ID=3 trên Desktop:<br>
-        y = {{ model_info.intercept }} + ({{ model_info.coefficients.product_id }} × 3) + ({{ model_info.coefficients.device_type }} × 1)
-        = <strong>{{ (model_info.intercept + model_info.coefficients.product_id * 3 + model_info.coefficients.device_type * 1)|round(2) }} giây</strong>
+        <strong>Nguồn dữ liệu:</strong> UCI Machine Learning Repository<br>
+        <strong>Dataset:</strong> Online Shoppers Purchasing Intention Dataset<br>
+        <strong>Số mẫu:</strong> {{ model_info.metrics.train_samples + model_info.metrics.test_samples }} mẫu thực tế
     </div>
 </div>
 
